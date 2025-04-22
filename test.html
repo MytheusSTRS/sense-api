@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>  
+        <!-- Όλα τα αρχεία που χρειαζόμαστε online για να μην χρειαζόμαστε άλλα αρχεία -->
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script> 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+        <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+
+    </head>
+    
+
+
+    <body>
+        <script>  
+            class Issue{
+                constructor(issue,description,comment,date,location){
+                    this.issue = issue;
+                    this.description = description;
+                    this.comments = comment;
+                    this.date = date;
+                    this.location = location;
+                }
+            }     
+            const city = "patras";                      
+            async function getData(startdate,enddate){ // τα dates στη μορφή YYYY-MM-DD
+                let _data = [];
+                try{
+                data = await fetch(`https://api.sense.city/api/1.0/issue?
+                                    startdate=${startdate}
+                                    &enddate=${enddate}
+                                    &city=${city}`,{method:"GET"});
+                let parsed = data.json()
+                parsed.then((value) => {
+                    let _date = '';
+                    let _issue = '';
+                    let _desc = '';
+                    let _comment = '';
+                    let _coords = [];
+                    // console.log(data);
+                    for (element of value){
+                        _date=moment(element.create_at).format('DD-MM-YYYY');
+                        _issue = element.issue;
+                        _dec = element.value_desc;
+                        _comment = element.comments;
+                        _coords = element.loc.coordinates;
+                        _data.push(new Issue(_issue,_desc,_comment,_date,_coords));
+                    }
+                });}
+                catch(error){
+                    console.log(error.message);
+                }
+                return _data;
+            }
+            getData("2025-04-20","2025-04-22")
+            .then((value) => console.log(value)); // Έτσι να καλείτε την συνάρτηση
+        </script>
+    </body>
+
+
+    </html>
