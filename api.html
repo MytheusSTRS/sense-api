@@ -10,9 +10,7 @@
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
         crossorigin=""></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"
-        integrity="sha512-hUhvpC5f8cgc04OZb55j0KNGh4eh7dLxd/dPSJ5VyzqDWxsayYbojWyl5Tkcgrmb/RVKCRJI1jNlRbVP4WWC4w=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="moment.js"></script>
 
     </head>
     
@@ -21,63 +19,53 @@
     <body>
         <script>
             //GET για τα feelings (Λογικά θα βάλουμε selectors για την κάθε παράμετρο στην σελίδα ;;;)
-            let feel_startdate = "";
-            let feel_enddate = "";
-            let feel_coords = []; //Να βάλω μια deafult τιμή
+            let feel_startdate = moment().subtract(1, 'months').format("YYYY-MM-DD");
+            let feel_enddate = moment().format("YYYY-MM-DD");
+            console.log(feel_startdate,feel_enddate);
+            // let feel_coords = []; //Να βάλω μια deafult τιμή
             let feel_distance = 2000;
             let feel_limit = 1000;
             let feel_sort = 1;       //1 for descending, 1 for ascending
-            let feel_city = "";
+            let feel_city = "patras";
             
             $.ajax({        
-                url: `https://api.sense.city/api/1.0/feelings?
-                startdate=${feel_startdate}
-                &enddate=${feel_enddate}
-                &coordinates=${feel_coords}
-                &distance=${feel_distance}
-                &limit=${feel_limit}
-                &sort=${feel_sort}
-                &city=${feel_city}
-                &feeling=happy%7Cneutral%7Cangry`,
+                url: `https://api.sense.city/api/1.0/feelings?startdate=${feel_startdate}&enddate=${feel_enddate}&distance=${feel_distance}&limit=${feel_limit}&sort=${feel_sort}&city=${feel_city}&feeling=happy%7Cneutral%7Cangry`,
 
                 method: 'GET',      
                 success: function(feelData)
                 {
-                    console.log(feelData);}
+                    let lenght = feelData.length;
+                    // console.log(feelData);
+
+                    for(let i=0;i<lenght;i++)
+                {
+                    // console.log(feelData[i].create_at);
+                }
+
+                }
                 })
 
             </script>
 
             <script>                                //Παίζει τα κοινά variables (πχ. startdate,enddate,sort κτλ. να τα κάνουμε κοινά και στα δύο GET)
-                let issue_startdate = ""
-                let issue_enddate = ""
-                let issue = ""                      //Filter by issue garbage, lighting, plumbing, road-constructor , protection-policy , green , environment
-                let issue_bug_id = ""
-                let issue_mobile = ""
-                let issue_email = ""
-                let issue_city = ""
-                let issue_limit = 0
-                let issue_sort = []                 //(1 for ascending, -1 for descending)
-                let issue_offset = ""
-                let issue_status_issue = ""         //(e.g., CONFIRMED, IN_PROGRESS, RESOLVED)
-                let issue_type = ""                 
-                let issue_image_field = ""          //(1 to include, 0 to exclude)
+                let issue_startdate = moment().subtract(1, 'months').format("YYYY-MM-DD");
+                let issue_enddate = moment().format("YYYY-MM-DD");
+                let issue = "garbage%7Clighting%7Cplumbing%7Croad-constructor%7Cprotection-policy%7Cgreen%7Cenvironment"                      
+                //Filter by issue garbage, lighting, plumbing, road-constructor , protection-policy , green , environment
+
+                // let issue_bug_id = ""
+                // let issue_mobile = ""
+                // let issue_email = ""
+                let issue_city = "patras"
+                let issue_limit = 1000
+                let issue_sort = 1                 //(1 for ascending, -1 for descending)
+                // let issue_offset = ""
+                // let issue_status_issue = ""         //(e.g., CONFIRMED, IN_PROGRESS, RESOLVED)
+                // let issue_type = ""                 
+                let issue_image_field = 1          //(1 to include, 0 to exclude)
                 
                 $.ajax({        
-                url: `https://api.sense.city/api/1.0/issue?
-                startdate=${issue_startdate}
-                &enddate=${issue_enddate}
-                &issue=${issue}
-                &bug_id=${issue_bug_id}
-                &mobile=${issue_mobile}
-                &email=${issue_email}
-                &city=${issue_city}
-                &limit=${issue_limit}
-                &sort=${issue_sort}
-                &offset=${issue_offset}
-                &status_issue=${issue_status_issue}
-                &issue_type=${issue_type}
-                &image_field=${issue_image_field}`,
+                url: `https://api.sense.city/api/1.0/issue?startdate=${issue_startdate}&enddate=${issue_enddate}&issue=${issue}&city=${issue_city}&limit=${issue_limit}&sort=${issue_sort}&image_field=${issue_image_field}`,
 
                 method: 'GET',      
                 success: function(issData)
