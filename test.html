@@ -28,28 +28,22 @@
                 }
             }     
             const city = "patras";                      
-            async function getData(startdate,enddate){ // τα dates στη μορφή YYYY-MM-DD
+            async function getData(startdate,enddate,request_type){ // τα dates στη μορφή YYYY-MM-DD request_type είναι 'issue' ή 'feelings'
                 let _data = [];
                 try{
-                data = await fetch(`https://api.sense.city/api/1.0/issue?
+                data = await fetch(`https://api.sense.city/api/1.0/${request_type}?
                                     startdate=${startdate}
                                     &enddate=${enddate}
                                     &city=${city}`,{method:"GET"});
                 let parsed = data.json()
                 parsed.then((value) => {
-                    let _date = '';
-                    let _issue = '';
-                    let _desc = '';
-                    let _comment = '';
-                    let _coords = [];
-                    // console.log(data);
                     for (element of value){
                         _date=moment(element.create_at).format('DD-MM-YYYY');
-                        _issue = element.issue;
-                        _dec = element.value_desc;
-                        _comment = element.comments;
-                        _coords = element.loc.coordinates;
-                        _data.push(new Issue(_issue,_desc,_comment,_date,_coords));
+                        _data.push(new Issue(element.issue,
+                                             element.value_desc,
+                                             element.comments,
+                                             moment(element.create_at).format('DD-MM-YYYY'),
+                                             element.loc.coordinates));
                     }
                 });}
                 catch(error){
@@ -57,10 +51,8 @@
                 }
                 return _data;
             }
-            getData("2025-04-20","2025-04-22")
+            getData("2025-04-20","2025-04-22","feelings")
             .then((value) => console.log(value)); // Έτσι να καλείτε την συνάρτηση
         </script>
     </body>
-
-
-    </html>
+</html>
