@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SenseCity Dashboard - Patras</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Required Libraries -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- Basic Page Styling -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Filter bar style */
+    .filters {
+      padding: 10px;
+      background: #f0f0f0;
+    }
+    .filters input {
+      margin: 5px;
+      padding: 5px;
+    }
+
+    /* Map container */
+    #map {
+      height: 400px;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Page Header -->
+  <h2 style="text-align:center;">SenseCity Issues - Patras</h2>
+
+  <!-- Filter Section -->
+  <div class="filters">
+    Start Date: <input type="date" id="startDate" value="2025-04-20">
+    End Date: <input type="date" id="endDate" value="2025-04-22">
+    <button onclick="loadAndRender()">Load Issues</button>
+  </div>
+
+  <!-- Map Section -->
+  <div></div> 
+  <!-- graph section -->
+  <div></div>
+
+  <!-- Redirect Button -->
+  <div style="text-align: center; margin: 20px;">
+    <button onclick="window.location.href='graph.html'" style="padding: 10px 20px; font-size: 16px;">
+      Go to graphs
+    </button><!-- se paei se allo html alla ston teliko kwdika tha ejafanizei to map div -->
+  </div>
+
+  <script>
+    // Class to model an Issue
+    class Issue {
+      constructor(issue, description, comment, date, location) {
+        this.issue = issue;
+        this.description = description;
+        this.comments = comment;
+        this.date = date;
+        this.location = location;
+      }
+    }
+
+    const city = "patras";
+    let markers = [];
+
+    // Function to fetch data from the API
+    async function getData(startdate, enddate, request_type) {
+      const _data = [];
+      try {
+        const response = await fetch(`https://api.sense.city/api/1.0/${request_type}?startdate=${startdate}&enddate=${enddate}&city=${city}`);
+        const value = await response.json();
+        for (const element of value) {
+          const date = moment(element.create_at).format('DD-MM-YYYY');
+          const loc = element.loc?.coordinates;
+          if (loc?.length === 2) {
+            _data.push(new Issue(
+              element.issue,
+              element.value_desc || "",
+              element.comments || "",
+              date,
+              loc
+            ));
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+      return _data;
+    }
+
+    // Initialize Leaflet map
+    const map = L.map('map').setView([38.2466, 21.7346], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Load and display data on map
+    async function loadAndRender() {
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+      const reports = await getData(startDate, endDate, "issue");
+
+      // Clear previous map markers
+      markers.forEach(m => map.removeLayer(m));
+      markers = [];
+
+      // Add new data
+      reports.forEach(report => {
+        const marker = L.marker([report.location[1], report.location[0]]).addTo(map)
+        markers.push(marker);
+      });
+    }
+
+    // Load data on initial page load
+    loadAndRender();
+  </script>
+
+</body>
+</html>
