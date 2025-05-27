@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <title>Patras Smart City Graphics</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 40px;
+      background: #1a4170fe;
+      background-position: center;
+      background-attachment: fixed;
+    }
+    .chart-section {
+      background: rgb(220, 226, 233);
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 800px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    }
+    h1 {
+      text-align: center;
+      color: #ffffff;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    canvas {
+      width: 100%;
+      height: 330px;
+    }
+    .chart-row {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    }
+
+  </style>
+</head>
+<body>
+    <h1>Patras Smart City</h1>
+
+  <div class="chart-row">
+  <div class="chart-section">
+    <h2>Κατηγορίες Προβλημάτων </h2>
+    <canvas id="issueChart"></canvas>
+  </div>
+
+  <div class="chart-section">
+    <h2>Συναισθήματα Πολιτών</h2>
+    <canvas id="feelingChart"></canvas>
+  </div>
+</div>
+
+
+  <script>
+    $(document).ready(function () {
+      const startDate = moment().subtract(1, 'months').format("YYYY-MM-DD");
+      const endDate = moment().format("YYYY-MM-DD");
+      const city = "patras";
+
+
+        $.ajax({
+        url: `https://api.sense.city/api/1.0/issue`,
+        method: "GET",
+        data: {
+            startdate: startDate,
+            enddate: endDate,
+            city: city,
+            limit: 1000,
+            sort: 1
+        },
+        success: function (issueData) {
+            const counts = {
+            garbage: 0,
+            lighting: 0,
+            environment: 0,
+            green: 0,
+            plumbing: 0,
+            "road-constructor": 0,
+            "protection-policy": 0
+            };
+
+            (JSON.parse(issueData)).forEach(item => {
+            console.log(item);
+            const issue = (item.issue);
+            if (issue in counts) {
+                counts[issue]++;
+            }
+            else{
+              counts[issue]=0;
+            }
+            });
+
+            const labelMap = {
+            garbage: "Σκουπίδια",
+            lighting: "Φωτισμός",
+            environment: "Περιβάλλον",
+            green: "Πράσινο",
+            plumbing: "Υδραυλικά",
+            "road-constructor": "Οδικά Έργα",
+            "protection-policy": "Θέματα ασφαλείας"
+            };
+
+            const colorMap = {
+            garbage: "#ff00ff",
+            lighting: "#ffff00",
+            environment: "#00ffff",
+            green: "#006400",
+            plumbing:'#4caf50' ,
+            "road-constructor": '#f44336',
+            "protection-policy": '#fff500'
+            };
+
+            const Labels = ["garbage", "lighting",, "green", "environment","plumbing","road-constructor","protection-policy"];
+            const translatedLabels = Labels.map(key => labelMap[key]);
+            const values = Labels.map(key => counts[key]);
+            console.log(values);
+            const backgroundColors = Labels.map(key => colorMap[key]);
+
+            const ctx = document.getElementById('issueChart').getContext('2d');
+            new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: translatedLabels,
+                datasets: [{
+                label: 'Πλήθος Αναφορών',
+                data: values,
+                backgroundColor: backgroundColors
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                y: {
+                    beginAtZero: true,
+                }
+                },
+                plugins: {
+                legend: {
+                    display: false
+                },
+
+                }
+            }
+            });
+        },
+        error: function () {
+            alert("Σφάλμα κατά την ανάκτηση των προβλημάτων.");
+        }
+        });
+       
+        const feel_url = `https://api.sense.city/api/1.0/feelings?startdate=${startDate}&enddate=${endDate}&city=${city}&distance=2000&limit=1000&sort=1`;
+
+        
+        $.ajax({
+        url: feel_url,
+        method: 'GET',
+        success: function (feelData) {
+            const counts = {
+            happy: 0,
+            angry: 0
+            };
+
+            feelData.forEach(item => {
+            const feeling = item.issue;
+            if (feeling in counts) {
+                counts[feeling]++;
+            }
+            });
+
+            const labels = ["happy", "angry"];
+            const data = labels.map(label => counts[label]);
+
+            const labelMap = {
+            happy: "Χαρούμενος",
+            angry: "Θυμωμένος"
+            };
+
+            const colorMap = {
+            happy: '#4caf50',
+            angry: '#f44336'
+            };
+
+            const translatedLabels = labels.map(l => labelMap[l]);
+            const backgroundColors = labels.map(l => colorMap[l]);
+            const ctx = document.getElementById('feelingChart').getContext('2d');
+            new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: translatedLabels,
+                datasets: [{
+                label: 'Πλήθος Αναφορών',
+                data: data,
+                backgroundColor: backgroundColors
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                y: {
+                    beginAtZero: true
+                }
+                },
+                plugins: {
+                legend: {
+                    display: false
+                }
+                }
+            }
+            });
+        },
+        error: function () {
+            alert("Αποτυχία φόρτωσης δεδομένων.");
+        }
+     });
+    });
+  </script>
+</body>
+</html>
