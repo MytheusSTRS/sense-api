@@ -11,6 +11,20 @@ class Issue {
   }
 }
 
+//Translates issue categories
+function translateCategories(category){
+  const labelMap = {
+      garbage: "Σκουπίδια",
+      lighting: "Φωτισμός",
+      environment: "Περιβάλλον",
+      green: "Πράσινο",
+      plumbing: 'Υδραυλικά',
+      "road-constructor": 'Οδικά Έργα',
+      "protection-policy": 'Θέματα ασφαλείας'
+    };
+  return labelMap[category]
+}
+
 const city = "patras";
 let markers = [];
 let reports = [];
@@ -91,7 +105,7 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 }).addTo(map);
 
 async function bind_popup_on_issue(marker, issue) {
-  marker.bindPopup(`<strong>${issue.issue}</strong><br>
+  marker.bindPopup(`<strong>${translateCategories(issue.issue)}</strong><br>
                           description = ${issue.description}<br>
                           Reported at: ${issue.date}`);
 }
