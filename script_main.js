@@ -2,12 +2,14 @@
 
 // Class to model an Issue
 class Issue {
-  constructor(issue, description, comment, date, location) {
+  constructor(issue, description, comment, date, location,status,img) {
     this.issue = issue;
     this.description = description;
     this.comments = comment;
     this.date = date;
     this.location = location;
+    this.status = status;
+    this.image = img
   }
 }
 
@@ -47,7 +49,9 @@ async function getData(startdate, enddate, request_type) {
             element.value_desc || "",
             element.comments || "",
             date,
-            loc
+            loc,
+            element.status,
+            element.image_name
           )
         );
       }
