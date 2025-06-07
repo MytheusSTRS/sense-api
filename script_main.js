@@ -2,7 +2,7 @@
 
 // Class to model an Issue
 class Issue {
-  constructor(issue, description, comment, date, location,status,img) {
+  constructor(issue, description, comment, date, location,status,img,id) {
     this.issue = issue;
     this.description = description;
     this.comments = comment;
@@ -10,6 +10,7 @@ class Issue {
     this.location = location;
     this.status = status;
     this.image = img
+    this.id = id
   }
 }
 
@@ -51,7 +52,8 @@ async function getData(startdate, enddate, request_type) {
             date,
             loc,
             element.status,
-            element.image_name
+            `https://api.sense.city/api/1.0/image_issue?bug_id=${element.bug_id}&resolution=full`,
+            element.bug_id
           )
         );
       }
@@ -110,8 +112,9 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 
 async function bind_popup_on_issue(marker, issue) {
   marker.bindPopup(`<strong>${translateCategories(issue.issue)}</strong><br>
+                          <img src=${issue.image} alt="No image" style="width:100%; max-height:200px; overflow:hidden; display:block; margin:auto">
                           description = ${issue.description}<br>
-                          Reported at: ${issue.date}`);
+                          Reported at: ${issue.date}`,{maxWidth:200});
 }
 
 // Load and display data on map
