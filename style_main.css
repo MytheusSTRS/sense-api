@@ -45,6 +45,10 @@ button {
     cursor: pointer;
     border: none;
 }
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
 
 #startDate,
 #endDate {
