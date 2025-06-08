@@ -111,9 +111,24 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 }).addTo(map);
 
 async function bind_popup_on_issue(marker, issue) {
+  let buttonEnabled = '';
+  if (issue.comments=='')
+  {
+    buttonEnabled = 'disabled';
+  }
   marker.bindPopup(`<strong>${translateCategories(issue.issue)}</strong><br>
                           <img src=${issue.image} alt="No image" style="width:100%; max-height:200px; overflow:hidden; display:block; margin:auto">
                           description = ${issue.description}<br>
+                          <div style="margin-left: -14px; text-align: left;">
+                          <button onclick="alert('${issue.comments}')"
+                          ${buttonEnabled}
+                          style="border:solid;
+                          font-size:14px;
+                          padding: 5px 8px;
+                          line-height:1;
+                          white-space:nowrap;
+                          ">Σχόλια χρήστη</button>
+                          </div>
                           Reported at: ${issue.date}`,{maxWidth:200});
 }
 
