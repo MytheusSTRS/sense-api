@@ -112,24 +112,34 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 
 async function bind_popup_on_issue(marker, issue) {
   let buttonEnabled = '';
+  const uniqueId = `comments-${Math.random().toString(36).substr(2, 9)}`; //Διαφορετικό id για κάθε marker
   if (issue.comments=='')
-  {
-    buttonEnabled = 'disabled';
-  }
+    {
+      buttonEnabled = 'disabled';
+    }
   marker.bindPopup(`<strong>${translateCategories(issue.issue)}</strong><br>
-                          <img src=${issue.image} alt="No image" style="width:100%; max-height:200px; overflow:hidden; display:block; margin:auto">
-                          ${issue.description}<br>
-                          <div style="margin-left: -14px; text-align: left;">
-                          <button onclick="alert('${issue.comments}')"
-                          ${buttonEnabled}
-                          style="border:solid;
-                          font-size:14px;
-                          padding: 5px 8px;
-                          line-height:1;
-                          white-space:nowrap;
-                          ">Σχόλια χρήστη</button>
-                          </div>
-                          Reported at: ${issue.date}`,{maxWidth:200});
+    <img src=${issue.image} alt="No image" style="width:100%; max-height:200px; overflow:hidden; display:block; margin:auto">
+    ${issue.description}<br>
+      <div style="margin-left: -14px; text-align: left;">
+        <button onclick="
+          if (document.getElementById('${uniqueId}').style.display == 'none')
+            document.getElementById('${uniqueId}').style.display = 'block';
+          else
+            {
+            document.getElementById('${uniqueId}').style.display = 'none';
+            }"
+          ${buttonEnabled}
+          style="border:solid;
+            font-size:14px;
+            padding: 5px 8px;
+            line-height:1;
+            white-space:nowrap;
+            ">Σχόλια χρήστη</button>
+      </div>
+        <div id="${uniqueId}" style="display:none">
+        ${issue.comments}
+      </div>
+      Reported at: ${issue.date}`,{maxWidth:200});
 }
 
 // Load and display data on map
