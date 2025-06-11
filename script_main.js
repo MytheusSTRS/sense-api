@@ -118,7 +118,7 @@ async function bind_popup_on_issue(marker, issue) {
   }
   marker.bindPopup(`<strong>${translateCategories(issue.issue)}</strong><br>
                           <img src=${issue.image} alt="No image" style="width:100%; max-height:200px; overflow:hidden; display:block; margin:auto">
-                          description = ${issue.description}<br>
+                          ${issue.description}<br>
                           <div style="margin-left: -14px; text-align: left;">
                           <button onclick="alert('${issue.comments}')"
                           ${buttonEnabled}
