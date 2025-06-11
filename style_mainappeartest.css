@@ -1,0 +1,139 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #4040a5;
+}
+
+.filters {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #020f2b;
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+    text-align: center;
+    font-size: 1vw;
+    color: white;
+    font-weight: 700;
+}
+
+#map {
+    height: 80vh;
+    width: 100%;
+    z-index: 1;
+}
+
+h1 {
+    text-align: center;
+    margin: 2vh;
+    font-size: 5vh;
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 700;
+}
+
+button {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding-top: .75vh;
+    padding-bottom: .75vh;
+    padding-left: 4vh;
+    padding-right: 4vh;
+    margin-left: 1.5vh;
+    margin-right: 1.5vh;
+    font-size: 1vw;
+    border-radius: 2vw;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+}
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+#startDate,
+#endDate {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1vw;
+    margin-left: 0.5vh;
+    margin-right: 2vh;
+    border-radius: 0.5vw;
+    font-weight: 600;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-button {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding-top: .75vh;
+    padding-bottom: .75vh;
+    padding-left: 4vh;
+    padding-right: 4vh;
+    margin-left: 1.5vh;
+    margin-right: 1.5vh;
+    font-size: 1vw;
+    border-radius: 2vw;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+}
+
+.dropdown-content {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding-top: .75vh;
+    padding-bottom: .75vh;
+    padding-left: 4vh;
+    padding-right: 4vh;
+    margin-left: 1.5vh;
+    margin-right: 1.5vh;
+    font-size: 1vw;
+    border-radius: 2vw;
+    font-weight: 700;
+    background-color: #ffffff;
+    color: #000000;
+    position: absolute;
+    z-index: 69;
+    display: none;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    text-align: left;
+}
+
+.dropdown-content label {
+    display: block;
+    margin-bottom: 1vh;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.show {
+    display: block;
+}
+
+
+    .container {
+      display: flex;
+      flex-direction: row;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .left-pane {
+      
+      flex: 4;
+      padding: 1vw;
+      box-sizing: border-box;
+    }
+
+    #right-pane {
+      display: none;
+      flex: 1.2;
+      padding: 20px;
+      background-color: #f8f9fa;
+      box-sizing: border-box;
+      border-left: 1px solid #ccc;
+    }
+    #right-pane.show {
+      display: block;
+    }

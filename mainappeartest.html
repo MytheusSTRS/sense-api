@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>SenseCity Dashboard - Patras</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Required Libraries -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script_main.js" defer></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style_main.css" />
+
+<body>
+  <button id="showBtn" >-></button>
+  <div class="container">
+    <!-- Αριστερή στήλη -->
+    <div class="left-pane">
+      <h1>SenseCity Issues - Patras</h1>
+      <div class="filters">
+        Start Date: <input type="date" id="startDate" value="2025-04-20" />
+        End Date: <input type="date" id="endDate" value="2025-04-22" />
+
+        <button onclick="initialize()">Load Issues <span id="totalReports"></span></button>
+
+        <div class="dropdown">
+          <button class="dropdown-button" onclick="toggleDropdown()">Filters</button>
+          <div class="dropdown-content" id="dropdownMenu">
+            <label><input type="checkbox" value="environment" checked> environment </label>
+            <label><input type="checkbox" value="road-constructor" checked> road-constructor </label>
+            <label><input type="checkbox" value="green" checked> green </label>
+            <label><input type="checkbox" value="garbage" checked> garbage </label>
+          </div>
+        </div>
+
+        <button onclick="window.location.href='graphs.html'">Go to graphs</button>
+        
+      </div>
+
+      <div id="map"></div>
+    </div>
+    <script>
+        document.getElementById('showBtn').addEventListener('click', function () {
+        document.getElementById('right-pane').classList.toggle('show');
+      });
+    </script>
+    <!-- Δεξιά στήλη -->
+    <!-- Δεξιά στήλη -->
+    <div id="right-pane">
+      <h2>Αριθμός Αναφορών Ανα Κατηγορία και Χρόνο</h2>
+      <canvas id="myChart" width="50" height="40"></canvas>
+      <canvas id="pieChart"></canvas>
+    </div>
+
+  </div>
+
+</body>
+
+</html>
