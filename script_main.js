@@ -198,11 +198,6 @@ async function initialize() {
   const countsByCategory = groupReportsByTimeBuckets(reports, startDate, endDate);
   const chartData = prepareChartData(countsByCategory, startDate, endDate);
   const percentages = calculatePercentages(reports);
-
-  await Promise.all([
-    drawChart(chartData),
-    drawPieChart(percentages),
-  ]);
 }
 
 
@@ -438,6 +433,9 @@ function getSelectedCategories() {
 
 document.querySelectorAll('#dropdownMenu input[type="checkbox"]').forEach(checkbox => {
   checkbox.addEventListener('change', () => {
+    filterMarkersByDropdown();  // <-- Αυτή λείπει!
+    
+    // Όσο αφορά τα γραφήματα, αν θέλεις να ενημερώνονται και αυτά:
     const startDate = document.getElementById("startDate").value;
     const endDate = document.getElementById("endDate").value;
     const countsByCategory = groupReportsByTimeBuckets(reports, startDate, endDate);
@@ -446,4 +444,96 @@ document.querySelectorAll('#dropdownMenu input[type="checkbox"]').forEach(checkb
   });
 });
 
+
 window.addEventListener('DOMContentLoaded', initialize);
+
+//
+
+let focusInterval = null;
+
+function toggleStats() {
+  const pane = document.getElementById("right-pane");
+  const btn = document.querySelector('button[onclick="toggleStats()"]');
+  const reportsTitle = document.getElementById("reports-title");
+
+  const isOpen = pane.classList.contains("show");
+
+  if (isOpen) {
+    pane.classList.remove("show");
+    btn.textContent = "Show Stats";
+
+    // Μετακίνηση χάρτη πίσω κατά 350 pixels όταν κλείνει το pane
+    moveMapByPixels(map, -350);
+
+    if (myChart) {
+      myChart.destroy();
+      myChart = null;
+    }
+    if (window.myPieChart) {
+      window.myPieChart.destroy();
+      window.myPieChart = null;
+    }
+
+    reportsTitle.style.display = "none";
+
+    if (focusInterval) {
+      clearInterval(focusInterval);
+      focusInterval = null;
+    }
+  } else {
+    pane.classList.add("show");
+    btn.textContent = "Hide Stats";
+
+    // Μετακίνηση χάρτη μπροστά κατά 350 pixels όταν ανοίγει το pane
+    moveMapByPixels(map, 350);
+
+    setTimeout(() => {
+      if (!reports || reports.length === 0) return;
+
+      const percentages = calculatePercentages(reports);
+      drawPieChart(percentages);
+
+      const startDate = document.getElementById("startDate").value;
+      const endDate = document.getElementById("endDate").value;
+      const countsByCategory = groupReportsByTimeBuckets(reports, startDate, endDate);
+      const chartData = prepareChartData(countsByCategory, startDate, endDate);
+      drawChart(chartData, true);
+
+      reportsTitle.style.display = "block";
+    }, 400);
+  }
+}
+
+let currentLat = 38.2466;
+let currentLng = 21.7346;
+
+function moveFocus() {
+  currentLng += 0.003;
+  map.panTo([currentLat, currentLng]);
+}
+
+// Συνάρτηση που υπολογίζει αλλαγή longitude για N pixels στο συγκεκριμένο zoom
+function longitudeDeltaForPixels(pixels, zoom) {
+  const pixelsPerDegreeAtZoom0 = 256 / 360; // ≈0.711
+  const pixelsPerDegree = pixelsPerDegreeAtZoom0 * Math.pow(2, zoom);
+  const degreesPerPixel = 1 / pixelsPerDegree;
+  return pixels * degreesPerPixel;
+}
+
+// Μετακινεί το map κατά N pixels δεξιά (αύξηση longitude)
+function moveMapByPixels(map, pixelsX) {
+  const zoom = map.getZoom();
+  const center = map.getCenter(); // επιστρέφει {lat, lng}
+
+  const deltaLng = longitudeDeltaForPixels(pixelsX, zoom);
+  const newLng = center.lng + deltaLng;
+
+  // Διατηρούμε το latitude ίδιο
+  const newCenter = [center.lat, newLng];
+
+map.setView(newCenter, zoom, { animate: true, duration: 0.5 });
+}
+
+function closeStats() {
+  document.getElementById("right-pane").classList.remove("show");
+}
