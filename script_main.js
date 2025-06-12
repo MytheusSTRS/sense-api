@@ -110,7 +110,7 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 
 async function bind_popup_on_issue(marker, issue) {
   let buttonEnabled = '';
-  const uniqueId = `comments-${Math.random().toString(36).substr(2, 9)}`; //Διαφορετικό id για κάθε marker
+  const uniqueId = `comments-${Math.random().toString(36).substr(2, 9)}`;
   if (issue.comments == '') {
     buttonEnabled = 'disabled';
   }
@@ -118,7 +118,7 @@ async function bind_popup_on_issue(marker, issue) {
   <div class="popup-container">
     <div class="popup-main">
       <strong>${translateCategories(issue.issue)}</strong><br>
-      <img src=${issue.image} alt="Δεν υπάρχει εικόνα" style="width:100%; max-height:200px; overflow:hidden; display:block; margin:auto">
+      <img src=${issue.image} alt="No image" style="width:100%; max-height:200px; overflow:hidden; display:block; margin:auto">
       ${issue.description}<br>
     </div>
     <div style="margin-left: -14px; text-align: left;">
@@ -139,7 +139,6 @@ async function bind_popup_on_issue(marker, issue) {
     <div id="${uniqueId}" style="display:none">
       ${issue.comments}
     </div>
-    <br>
     Αναφέρθηκε στις: ${issue.date}
   </div>
 `, { maxWidth: 200 });
@@ -170,6 +169,15 @@ async function loadAndRender() {
 
   filterMarkersByDropdown();
 
+  if (statsVisible) {
+    const countsByCategory = groupReportsByTimeBuckets(reports, startDate, endDate);
+    const chartData = prepareChartData(countsByCategory, startDate, endDate);
+    drawChart(chartData, false);
+
+    const percentages = calculatePercentages(reports);
+    drawPieChart(percentages);
+  }
+
   return;
 }
 
@@ -191,8 +199,7 @@ function filterMarkersByDropdown() {
 
 // Function to initialize the page
 async function initialize() {
-  await loadAndRender(); // πρέπει να γίνει πρώτα
-
+  await loadAndRender();
   const startDate = document.getElementById("startDate").value;
   const endDate = document.getElementById("endDate").value;
 
@@ -252,7 +259,6 @@ function prepareChartData(countsByCategory, startDateStr, endDateStr) {
 
   const selectedCategories = getSelectedCategories();
 
-  // Υπολογισμός συνολικών reports ανά κατηγορία
   const totalCounts = {};
   categories.forEach(cat => {
     const countsArray = countsByCategory[cat] || new Array(bucketCount).fill(0);
@@ -262,7 +268,7 @@ function prepareChartData(countsByCategory, startDateStr, endDateStr) {
   const datasets = categories
     .filter(cat => selectedCategories.includes(cat))
     .map(cat => ({
-      label: `${cat} (${totalCounts[cat]})`, // εδώ προσθέτουμε το πλήθος
+      label: `${cat} (${totalCounts[cat]})`,
       data: countsByCategory[cat] || new Array(bucketCount).fill(0),
       backgroundColor: colors[cat],
       borderColor: colors[cat].replace('0.7', '1'),
@@ -434,9 +440,8 @@ function getSelectedCategories() {
 
 document.querySelectorAll('#dropdownMenu input[type="checkbox"]').forEach(checkbox => {
   checkbox.addEventListener('change', () => {
-    filterMarkersByDropdown();  // <-- Αυτή λείπει!
-    
-    // Όσο αφορά τα γραφήματα, αν θέλεις να ενημερώνονται και αυτά:
+    filterMarkersByDropdown();
+
     const startDate = document.getElementById("startDate").value;
     const endDate = document.getElementById("endDate").value;
     const countsByCategory = groupReportsByTimeBuckets(reports, startDate, endDate);
@@ -445,6 +450,7 @@ document.querySelectorAll('#dropdownMenu input[type="checkbox"]').forEach(checkb
   });
 });
 
+let statsVisible = false;
 
 window.addEventListener('DOMContentLoaded', initialize);
 
@@ -463,7 +469,9 @@ function toggleStats() {
   if (isOpen) {
     pane.classList.remove("show");
     btn.textContent = "Show Stats";
-
+    statsVisible = false;
+    pane.classList.remove("show");
+    rightPane.style.width = '';
     map.panBy([-350, 0], { animate: true, duration: 0.5 });
 
     if (myChart) {
@@ -479,8 +487,9 @@ function toggleStats() {
   } else {
     pane.classList.add("show");
     btn.textContent = "Hide Stats";
+    statsVisible = true;
 
-    originalCenter = map.getCenter(); // Αν θες να κρατήσεις την αρχική θέση
+    originalCenter = map.getCenter();
 
     map.panBy([350, 0], { animate: true, duration: 0.5 });
 
@@ -501,7 +510,6 @@ function toggleStats() {
   }
 }
 
-// Συνάρτηση που υπολογίζει αλλαγή longitude για N pixels στο συγκεκριμένο zoom
 function longitudeDeltaForPixels(pixels, zoom) {
   const pixelsPerDegreeAtZoom0 = 256 / 360; // ≈0.711
   const pixelsPerDegree = pixelsPerDegreeAtZoom0 * Math.pow(2, zoom);
@@ -509,20 +517,72 @@ function longitudeDeltaForPixels(pixels, zoom) {
   return pixels * degreesPerPixel;
 }
 
-// Μετακινεί το map κατά N pixels δεξιά (αύξηση longitude)
 function moveMapByPixels(map, pixelsX) {
   const zoom = map.getZoom();
-  const center = map.getCenter(); // επιστρέφει {lat, lng}
-
+  const center = map.getCenter();
   const deltaLng = longitudeDeltaForPixels(pixelsX, zoom);
   const newLng = center.lng + deltaLng;
 
-  // Διατηρούμε το latitude ίδιο
   const newCenter = [center.lat, newLng];
 
-map.setView(newCenter, zoom, { animate: true, duration: 0.5 });
+  map.setView(newCenter, zoom, { animate: true, duration: 0.5 });
 }
 
 function closeStats() {
   document.getElementById("right-pane").classList.remove("show");
 }
+
+
+const rightPane = document.getElementById('right-pane');
+const dragHandle = document.getElementById('drag-handle');
+
+let isDragging = false;
+let startX = 0;
+let startWidth = 0;
+
+const MIN_WIDTH = 350;
+const MAX_WIDTH = 500;
+
+dragHandle.addEventListener('mousedown', (e) => {
+  isDragging = true;
+  startX = e.clientX;
+  startWidth = rightPane.offsetWidth;
+
+  document.body.style.userSelect = 'none';
+});
+
+document.addEventListener('mouseup', () => {
+  if (isDragging) {
+    isDragging = false;
+    document.body.style.userSelect = '';
+  }
+});
+
+document.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+
+  const dx = startX - e.clientX;
+  let newWidth = startWidth + dx;
+  if (newWidth < MIN_WIDTH) newWidth = MIN_WIDTH;
+  if (newWidth > MAX_WIDTH) newWidth = MAX_WIDTH;
+
+  rightPane.style.width = `${newWidth}px`;
+
+  const buttons = document.querySelectorAll('button');
+
+  buttons.forEach(btn => {
+    if (rightPane.offsetWidth > 365) {
+      btn.style.paddingLeft = "2.5vh";
+      btn.style.paddingLeft = "2.5vh";
+      btn.style.marginLeft = ".5vh";
+      btn.style.marginRight = ".5vh";
+    }
+    else {
+      btn.style.paddingLeft = "4vh";
+      btn.style.paddingLeft = "4vh";
+      btn.style.marginLeft = "1.5vh";
+      btn.style.marginRight = "1.5vh";
+    }
+  });
+
+});
