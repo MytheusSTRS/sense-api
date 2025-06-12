@@ -451,6 +451,7 @@ window.addEventListener('DOMContentLoaded', initialize);
 //
 
 let focusInterval = null;
+let originalCenter = null;
 
 function toggleStats() {
   const pane = document.getElementById("right-pane");
@@ -463,8 +464,7 @@ function toggleStats() {
     pane.classList.remove("show");
     btn.textContent = "Show Stats";
 
-    // Μετακίνηση χάρτη πίσω κατά 350 pixels όταν κλείνει το pane
-    moveMapByPixels(map, -350);
+    map.panBy([-350, 0], { animate: true, duration: 0.5 });
 
     if (myChart) {
       myChart.destroy();
@@ -474,19 +474,15 @@ function toggleStats() {
       window.myPieChart.destroy();
       window.myPieChart = null;
     }
-
     reportsTitle.style.display = "none";
 
-    if (focusInterval) {
-      clearInterval(focusInterval);
-      focusInterval = null;
-    }
   } else {
     pane.classList.add("show");
     btn.textContent = "Hide Stats";
 
-    // Μετακίνηση χάρτη μπροστά κατά 350 pixels όταν ανοίγει το pane
-    moveMapByPixels(map, 350);
+    originalCenter = map.getCenter(); // Αν θες να κρατήσεις την αρχική θέση
+
+    map.panBy([350, 0], { animate: true, duration: 0.5 });
 
     setTimeout(() => {
       if (!reports || reports.length === 0) return;
@@ -503,14 +499,6 @@ function toggleStats() {
       reportsTitle.style.display = "block";
     }, 400);
   }
-}
-
-let currentLat = 38.2466;
-let currentLng = 21.7346;
-
-function moveFocus() {
-  currentLng += 0.003;
-  map.panTo([currentLat, currentLng]);
 }
 
 // Συνάρτηση που υπολογίζει αλλαγή longitude για N pixels στο συγκεκριμένο zoom
