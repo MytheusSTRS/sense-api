@@ -64,6 +64,7 @@ async function getData(startdate, enddate, request_type) {
     );
     const value = await response.json();
     for (const element of value) {
+      console.log(element.status);
       const date = moment(element.create_at).format("DD-MM-YYYY");
       const loc = element.loc?.coordinates;
       if (loc?.length === 2) {
