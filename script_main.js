@@ -554,8 +554,8 @@ let startX = 0;
 let startWidth = 0;
 
 const screenWidth = screen.width;
-const MIN_WIDTH = 0.195*screenWidth;
-const MAX_WIDTH = 0.25*screenWidth;
+const MIN_WIDTH = 0.17*screenWidth;
+const MAX_WIDTH = 0.225*screenWidth;
 
 dragHandle.addEventListener('mousedown', (e) => {
   isDragging = true;
@@ -586,7 +586,7 @@ document.addEventListener('mousemove', (e) => {
     const buttons = document.querySelectorAll('button');
 
     buttons.forEach(btn => {
-      if (rightPane.offsetWidth > (0.23 * screenWidth)) {
+      if (rightPane.offsetWidth > (0.205 * screenWidth)) {
         btn.style.paddingLeft = "2.5vh";
         btn.style.marginLeft = ".5vh";
         btn.style.marginRight = ".5vh";
