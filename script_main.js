@@ -13,19 +13,44 @@ class Issue {
 }
 
 //Translates issue categories
-function translateCategories(category) {
-  const labelMap = {
-    garbage: "Σκουπίδια",
-    lighting: "Φωτισμός",
-    environment: "Περιβάλλον",
-    green: "Πράσινο",
-    plumbing: 'Υδραυλικά',
+const labelMap = {
+    "garbage": "Σκουπίδια",
+    "lighting": "Φωτισμός",
+    "environment": "Περιβάλλον",
+    "green": "Πράσινο",
+    "plumbing": 'Υδραυλικά',
     "road-constructor": 'Οδικά Έργα',
     "protection-policy": 'Θέματα ασφαλείας'
-  };
+};
+//Translates issue categories
+function translateCategories(category) {
+  // const labelMap = {
+  //   "garbage": "Σκουπίδια",
+  //   "lighting": "Φωτισμός",
+  //   "environment": "Περιβάλλον",
+  //   "green": "Πράσινο",
+  //   "plumbing": 'Υδραυλικά',
+  //   "road-constructor": 'Οδικά Έργα',
+  //   "protection-policy": 'Θέματα ασφαλείας'
+  // };
   return labelMap[category]
 }
 
+//Loads custom marker icons depending on issue category
+function loadMarkerIcons(){
+  const icons = {}
+  for (const element of Object.keys(labelMap)){
+    icons[element]=new L.icon({
+    iconUrl: `./icons/${element}.png`,
+    shadowUrl: `./icons/shadow.png`,
+    iconSize:     [50,50], // size of the icon
+    shadowSize:   [30,50], // size of the shadow
+    iconAnchor:   [25,50], // point of the icon which will correspond to marker's location
+    shadowAnchor: [15,51],  // the same for the shadow
+    popupAnchor:  [5,-45] // point from which the popup should open relative to the iconAnchor
+  })};
+  return icons;
+}
 const city = "patras";
 let markers = [];
 let reports = [];
@@ -155,6 +180,7 @@ async function bind_popup_on_issue(marker, issue) {
 async function loadAndRender() {
   const startDate = document.getElementById("startDate").value;
   const endDate = document.getElementById("endDate").value;
+  const marker_icons = loadMarkerIcons();
 
   reports = await getData(startDate, endDate, "issue");
 
@@ -162,7 +188,7 @@ async function loadAndRender() {
   markers = [];
 
   reports.forEach(report => {
-    const marker = L.marker([report.location[1], report.location[0]]);
+    const marker = L.marker([report.location[1], report.location[0]],{icon:marker_icons[report.issue]});
     bind_popup_on_issue(marker, report);
     marker.addTo(map);
     marker.issueType = report.issue;
