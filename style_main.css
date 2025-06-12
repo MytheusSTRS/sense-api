@@ -143,17 +143,50 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .left-pane {
-    flex: 4;
+    /* flex: 4; */
     padding: 1vw;
     box-sizing: border-box;
+          transition: all 0.5s ease;
+                flex-grow: 1;
+
+
 }
 
-.right-pane {
-    flex: 1.2;
-    padding: 20px;
-    background-color: #f8f9fa;
-    box-sizing: border-box;
-    border-left: 1px solid #ccc;
+#right-pane {
+  top: 0;
+  right: 0;
+  width: 0;
+  padding: 0;
+  transition: all 0.5s ease;
+  position: relative;
+  overflow: hidden;
+  background-color: #f8f9fa;
+  box-sizing: border-box;
+  border-left: 1px solid #ccc;
+  
+}
+
+    #right-pane.show {
+        width: 350px;
+        padding: 20px;   /* slide in */
+  position: relative;
+    }
+    #right-pane .closebtn {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 28px;
+        cursor: pointer;
+    }
+#drag-handle {
+  position: absolute;
+  top: 0;
+  left: 0; /* τοποθετημένο στην αριστερή άκρη του right-pane */
+  width: 5px;
+  height: 100%;
+  cursor: ew-resize; /* κέρσορας αριστερό-δεξί */
+  background-color: rgba(0,0,0,0.1); /* διακριτικό */
+  z-index: 10;
 }
 
 .leaflet-control-zoom {
@@ -192,4 +225,26 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   border-radius: 1.5vh;
   margin-bottom: 1vh;
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/**/
+
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+#reports-title {
+  display: none;
+}
+
+#resize-handle {
+  position: absolute;
+  left: 0; /* άκρη του right-pane */
+  top: 0;
+  width: 5px;
+  height: 100%;
+  cursor: ew-resize;
+  background-color: transparent; /* αν θες, για να μη φαίνεται */
+  z-index: 10;
 }
