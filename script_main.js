@@ -139,6 +139,7 @@ async function bind_popup_on_issue(marker, issue) {
     <div id="${uniqueId}" style="display:none">
       ${issue.comments}
     </div>
+    <br>
     Αναφέρθηκε στις: ${issue.date}
   </div>
 `, { maxWidth: 200 });
