@@ -12,6 +12,15 @@ class Issue {
   }
 }
 
+const labelMap = {
+    "garbage": "Σκουπίδια",
+    "lighting": "Φωτισμός",
+    "environment": "Περιβάλλον",
+    "green": "Πράσινο",
+    "plumbing": 'Υδραυλικά',
+    "road-constructor": 'Οδικά Έργα',
+    "protection-policy": 'Θέματα ασφαλείας'
+};
 //Translates issue categories
 function translateCategories(category) {
   // const labelMap = {
