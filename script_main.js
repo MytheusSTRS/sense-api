@@ -121,7 +121,7 @@ function countMarkersByCategory(reports) {
     lighting: 0,
     plumbing: 0,
     'protection-policy': 0
-  };
+  };  
 
   reports.forEach(issue => {
     if (counts.hasOwnProperty(issue.issue)) {
