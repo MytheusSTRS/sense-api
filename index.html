@@ -32,26 +32,30 @@
             <label><input type="checkbox" value="road-constructor" checked> Οδικά Έργα </label>
             <label><input type="checkbox" value="green" checked> Πράσινο </label>
             <label><input type="checkbox" value="garbage" checked> Σκουπίδια </label>
+            <label><input type="checkbox" value="lighting" checked> Φωτισμός </label>
+            <label><input type="checkbox" value="plumbing" checked> Υδραυλικά </label>
+            <label><input type="checkbox" value="protection-policy" checked> Θέματα ασφαλείας </label>
+
           </div>
         </div>
 
         <button onclick="window.location.href='graphs.html'">Γραφήματα</button>
         <!---->
-<button onclick="toggleStats()">Show Stats</button>
+        <button onclick="toggleStats()">Show Stats</button>
 
       </div>
 
       <div id="map"></div>
     </div>
 
-<div id="right-pane">
-    <div id="drag-handle"></div>
+    <div id="right-pane">
+      <div id="drag-handle"></div>
 
-  <span class="closebtn" onclick="closeStats()">&times;</span>
-<h2 id="reports-title">Αριθμός Αναφορών Ανα Κατηγορία και Χρόνο</h2>
-  <canvas id="myChart" width="50" height="40"></canvas>
-  <canvas id="pieChart"></canvas>
-</div>
+      <span class="closebtn" onclick="closeStats()">&times;</span>
+      <h2 id="reports-title">Αριθμός Αναφορών Ανα Κατηγορία και Χρόνο</h2>
+      <canvas id="myChart" width="50" height="40"></canvas>
+      <canvas id="pieChart"></canvas>
+    </div>
 
 
   </div>
