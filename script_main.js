@@ -204,7 +204,7 @@ async function loadAndRender() {
   if (statsVisible) {
     const countsByCategory = groupReportsByTimeBuckets(reports, startDate, endDate);
     const chartData = prepareChartData(countsByCategory, startDate, endDate);
-    drawChart(chartData, false);
+    drawChart(chartData, true);
 
     const percentages = calculatePercentages(reports);
     drawPieChart(percentages);
@@ -499,41 +499,22 @@ window.addEventListener('DOMContentLoaded', initialize);
 //
 
 function toggleStats() {
-  const pane = document.getElementById("right-pane");
-  const btn = document.querySelector('button[onclick="toggleStats()"]');
-  const reportsTitle = document.getElementById("reports-title");
+  if (statsVisible)
+    closeStats();
+  else
+    openStats();
+  return;
+}
 
-  const isOpen = pane.classList.contains("show");
-
-  if (isOpen) {
-    pane.classList.remove("show");
-    btn.textContent = "Show Stats";
-    statsVisible = false;
-    pane.classList.remove("show");
-    rightPane.style.width = '';
-    map.panBy([-350, 0], { animate: true, duration: 0.5 });
-
-    if (myChart) {
-      myChart.destroy();
-      myChart = null;
-    }
-    if (window.myPieChart) {
-      window.myPieChart.destroy();
-      window.myPieChart = null;
-    }
-    reportsTitle.style.display = "none";
-
-  } else {
-    pane.classList.add("show");
-    btn.textContent = "Hide Stats";
+function openStats() {
+    
+  document.getElementById("right-pane").classList.add("show");
+    document.getElementById('toggle').textContent = "->";
     statsVisible = true;
-
-    originalCenter = map.getCenter();
-
+    
     map.panBy([350, 0], { animate: true, duration: 0.5 });
 
     setTimeout(() => {
-      if (!reports || reports.length === 0) return;
 
       const percentages = calculatePercentages(reports);
       drawPieChart(percentages);
@@ -544,15 +525,24 @@ function toggleStats() {
       const chartData = prepareChartData(countsByCategory, startDate, endDate);
       drawChart(chartData, true);
 
-      reportsTitle.style.display = "block";
+      document.getElementById("reports-title").style.display = "block";
     }, 400);
   }
-}
 
 function closeStats() {
   document.getElementById("right-pane").classList.remove("show");
-}
+    document.getElementById('toggle').textContent = "<-";
+    statsVisible = false;
+    rightPane.style.width = '';
+    map.panBy([-350, 0], { animate: true, duration: 0.5 });
 
+    myChart.destroy();
+    myChart = null;
+
+      window.myPieChart.destroy();
+      window.myPieChart = null;
+      document.getElementById("reports-title").style.display = "none";
+}
 
 const rightPane = document.getElementById('right-pane');
 const dragHandle = document.getElementById('drag-handle');
