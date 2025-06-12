@@ -1,3 +1,5 @@
+//// SOS TELOS KWDIKA
+
 // Class to model an Issue
 class Issue {
   constructor(issue, description, comment, date, location, status, img, id) {
@@ -551,8 +553,9 @@ let isDragging = false;
 let startX = 0;
 let startWidth = 0;
 
-const MIN_WIDTH = 350;
-const MAX_WIDTH = 500;
+const screenWidth = screen.width;
+const MIN_WIDTH = 0.195*screenWidth;
+const MAX_WIDTH = 0.25*screenWidth;
 
 dragHandle.addEventListener('mousedown', (e) => {
   isDragging = true;
@@ -579,21 +582,29 @@ document.addEventListener('mousemove', (e) => {
 
   rightPane.style.width = `${newWidth}px`;
 
-  const buttons = document.querySelectorAll('button');
+  setTimeout(() => {
+    const buttons = document.querySelectorAll('button');
 
-  buttons.forEach(btn => {
-    if (rightPane.offsetWidth > 365) {
-      btn.style.paddingLeft = "2.5vh";
-      btn.style.paddingLeft = "2.5vh";
-      btn.style.marginLeft = ".5vh";
-      btn.style.marginRight = ".5vh";
-    }
-    else {
-      btn.style.paddingLeft = "4vh";
-      btn.style.paddingLeft = "4vh";
-      btn.style.marginLeft = "1.5vh";
-      btn.style.marginRight = "1.5vh";
-    }
-  });
+    buttons.forEach(btn => {
+      if (rightPane.offsetWidth > (0.23 * screenWidth)) {
+        btn.style.paddingLeft = "2.5vh";
+        btn.style.marginLeft = ".5vh";
+        btn.style.marginRight = ".5vh";
+      } else {
+        btn.style.paddingLeft = "4vh";
+        btn.style.marginLeft = "1.5vh";
+        btn.style.marginRight = "1.5vh";
+      }
+    });
+  }, 200);
+});
 
+//////////////////////// SOS: AS TO KANEI KAPOIOS COOL
+
+dragHandle.addEventListener('mouseenter', () => {
+  dragHandle.style.width = '.5vw';
+});
+
+dragHandle.addEventListener('mouseleave', () => {
+  dragHandle.style.width = '.2vw';
 });
