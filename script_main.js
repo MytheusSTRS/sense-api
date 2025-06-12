@@ -12,43 +12,18 @@ class Issue {
   }
 }
 
-const labelMap = {
-    "garbage": "Σκουπίδια",
-    "lighting": "Φωτισμός",
-    "environment": "Περιβάλλον",
-    "green": "Πράσινο",
-    "plumbing": 'Υδραυλικά',
-    "road-constructor": 'Οδικά Έργα',
-    "protection-policy": 'Θέματα ασφαλείας'
-};
 //Translates issue categories
 function translateCategories(category) {
-  // const labelMap = {
-  //   "garbage": "Σκουπίδια",
-  //   "lighting": "Φωτισμός",
-  //   "environment": "Περιβάλλον",
-  //   "green": "Πράσινο",
-  //   "plumbing": 'Υδραυλικά',
-  //   "road-constructor": 'Οδικά Έργα',
-  //   "protection-policy": 'Θέματα ασφαλείας'
-  // };
+  const labelMap = {
+    garbage: "Σκουπίδια",
+    lighting: "Φωτισμός",
+    environment: "Περιβάλλον",
+    green: "Πράσινο",
+    plumbing: 'Υδραυλικά',
+    "road-constructor": 'Οδικά Έργα',
+    "protection-policy": 'Θέματα ασφαλείας'
+  };
   return labelMap[category]
-}
-
-//Loads custom marker icons depending on issue category
-function loadMarkerIcons(){
-  const icons = {}
-  for (const element of Object.keys(labelMap)){
-    icons[element]=new L.icon({
-    iconUrl: `./icons/${element}.png`,
-    shadowUrl: `./icons/shadow.png`,
-    iconSize:     [50,50], // size of the icon
-    shadowSize:   [30,50], // size of the shadow
-    iconAnchor:   [25,50], // point of the icon which will correspond to marker's location
-    shadowAnchor: [15,51],  // the same for the shadow
-    popupAnchor:  [5,-45] // point from which the popup should open relative to the iconAnchor
-  })};
-  return icons;
 }
 
 const city = "patras";
@@ -107,14 +82,20 @@ function countMarkersByCategory(reports) {
     environment: 0,
     'road-constructor': 0,
     green: 0,
-    garbage: 0
+    garbage: 0,
+    lighting: 0,
+    plumbing: 0,
+    'protection-policy': 0
   };
 
   const counts = {
     environment: 0,
     'road-constructor': 0,
     green: 0,
-    garbage: 0
+    garbage: 0,
+    lighting: 0,
+    plumbing: 0,
+    'protection-policy': 0
   };
 
   reports.forEach(issue => {
@@ -174,7 +155,6 @@ async function bind_popup_on_issue(marker, issue) {
 async function loadAndRender() {
   const startDate = document.getElementById("startDate").value;
   const endDate = document.getElementById("endDate").value;
-  const marker_icons = loadMarkerIcons();
 
   reports = await getData(startDate, endDate, "issue");
 
@@ -182,7 +162,7 @@ async function loadAndRender() {
   markers = [];
 
   reports.forEach(report => {
-    const marker = L.marker([report.location[1], report.location[0]],{icon:marker_icons[report.issue]});
+    const marker = L.marker([report.location[1], report.location[0]]);
     bind_popup_on_issue(marker, report);
     marker.addTo(map);
     marker.issueType = report.issue;
@@ -226,13 +206,8 @@ function filterMarkersByDropdown() {
 // Function to initialize the page
 async function initialize() {
   await loadAndRender();
-  const startDate = document.getElementById("startDate").value;
-  const endDate = document.getElementById("endDate").value;
-
-  const countsByCategory = groupReportsByTimeBuckets(reports, startDate, endDate);
-  const chartData = prepareChartData(countsByCategory, startDate, endDate);
-  const percentages = calculatePercentages(reports);
 }
+
 
 
 // Function to get graph points
@@ -244,7 +219,7 @@ function groupReportsByTimeBuckets(reports, startDateStr, endDateStr) {
   const bucketMs = totalMs / bucketCount;
 
 
-  const categories = ['environment', 'road-constructor', 'green', 'garbage'];
+  const categories = ['environment', 'road-constructor', 'green', 'garbage', 'lighting', 'plumbing', 'protection-policy'];
 
   const counts = {};
   categories.forEach(cat => {
@@ -275,12 +250,15 @@ function prepareChartData(countsByCategory, startDateStr, endDateStr) {
   const totalMs = endDate - startDate;
   const bucketMs = totalMs / bucketCount;
 
-  const categories = ['environment', 'road-constructor', 'green', 'garbage'];
+  const categories = ['environment', 'road-constructor', 'green', 'garbage', 'lighting', 'plumbing', 'protection-policy'];
   const colors = {
     environment: 'rgba(54, 162, 235, 0.7)',
     'road-constructor': 'rgba(255, 159, 64, 0.7)',
     green: 'rgba(75, 192, 192, 0.7)',
-    garbage: 'rgba(255, 99, 132, 0.7)'
+    garbage: 'rgba(255, 99, 132, 0.7)',
+    lighting: 'rgba(99, 255, 151, 0.7)',
+    plumbing: 'rgba(126, 60, 96, 0.7)',
+    'protection-policy': 'rgba(112, 165, 63, 0.7)'
   };
 
   const selectedCategories = getSelectedCategories();
@@ -396,6 +374,9 @@ function calculatePercentages(reports) {
       'road-constructor': 0,
       green: 0,
       garbage: 0,
+      lighting: 0,
+      plumbing: 0,
+      'protection-policy': 0
     };
   }
 
@@ -418,25 +399,34 @@ function drawPieChart(percentages) {
   window.myPieChart = new Chart(ctx, {
     type: 'pie',
     data: {
-      labels: ['Environment', 'Road Constructor', 'Green', 'Garbage'],
+      labels: ['environment', 'road-constructor', 'green', 'garbage', 'lighting', 'plumbing', 'protection-policy'],
       datasets: [{
         data: [
           percentages.environment,
           percentages['road-constructor'],
           percentages.green,
-          percentages.garbage
+          percentages.garbage,
+          percentages.lighting,
+          percentages.plumbing,
+          percentages['protection-policy']
         ],
         backgroundColor: [
           'rgba(54, 162, 235, 0.7)',
           'rgba(255, 159, 64, 0.7)',
           'rgba(75, 192, 192, 0.7)',
-          'rgba(255, 99, 132, 0.7)'
+          'rgba(255, 99, 132, 0.7)',
+          'rgba(99, 255, 151, 0.7)',
+          'rgba(126, 60, 96, 0.7)',
+          'rgba(112, 165, 63, 0.7)'
         ],
         borderColor: [
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 159, 64, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(255, 99, 132, 1)'
+          'rgba(54, 162, 235, 0.7)',
+          'rgba(255, 159, 64, 0.7)',
+          'rgba(75, 192, 192, 0.7)',
+          'rgba(255, 99, 132, 0.7)',
+          'rgba(99, 255, 151, 0.7)',
+          'rgba(126, 60, 96, 0.7)',
+          'rgba(112, 165, 63, 0.7)'
         ],
         borderWidth: 1
       }]
@@ -481,9 +471,6 @@ let statsVisible = false;
 window.addEventListener('DOMContentLoaded', initialize);
 
 //
-
-let focusInterval = null;
-let originalCenter = null;
 
 function toggleStats() {
   const pane = document.getElementById("right-pane");
@@ -534,24 +521,6 @@ function toggleStats() {
       reportsTitle.style.display = "block";
     }, 400);
   }
-}
-
-function longitudeDeltaForPixels(pixels, zoom) {
-  const pixelsPerDegreeAtZoom0 = 256 / 360; // ≈0.711
-  const pixelsPerDegree = pixelsPerDegreeAtZoom0 * Math.pow(2, zoom);
-  const degreesPerPixel = 1 / pixelsPerDegree;
-  return pixels * degreesPerPixel;
-}
-
-function moveMapByPixels(map, pixelsX) {
-  const zoom = map.getZoom();
-  const center = map.getCenter();
-  const deltaLng = longitudeDeltaForPixels(pixelsX, zoom);
-  const newLng = center.lng + deltaLng;
-
-  const newCenter = [center.lat, newLng];
-
-  map.setView(newCenter, zoom, { animate: true, duration: 0.5 });
 }
 
 function closeStats() {
