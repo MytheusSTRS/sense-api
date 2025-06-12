@@ -166,7 +166,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 #right-pane.show {
-  width: 350px;
+  width: 19.5vw;
   padding: 20px;
   /* slide in */
   position: relative;
@@ -176,7 +176,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   position: absolute;
   top: 0;
   right: 0;
-  font-size: 28px;
+  font-size: 4vh;
   cursor: pointer;
 }
 
@@ -184,13 +184,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   position: absolute;
   top: 0;
   left: 0;
-  /* τοποθετημένο στην αριστερή άκρη του right-pane */
-  width: 5px;
+  width: .2vw;
   height: 100%;
   cursor: ew-resize;
-  /* κέρσορας αριστερό-δεξί */
   background-color: rgba(0, 0, 0, 0.1);
-  /* διακριτικό */
   z-index: 10;
 }
 
@@ -203,7 +200,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .leaflet-control-zoom-in,
 .leaflet-control-zoom-out {
   color: #1a4170 !important;
-  font-size: 22px;
+  font-size: 22px; /* den eimai sigouros ti allazei auto */
   font-weight: bold;
   background-color: white;
   border: none;
