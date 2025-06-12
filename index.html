@@ -36,16 +36,23 @@
         </div>
 
         <button onclick="window.location.href='graphs.html'">Γραφήματα</button>
+        <!---->
+<button onclick="toggleStats()">Show Stats</button>
+
       </div>
 
       <div id="map"></div>
     </div>
 
-      <div class="right-pane">
-      <h2>Αριθμός Αναφορών Ανα Κατηγορία και Χρόνο</h2>
-      <canvas id="myChart" width="50" height="40"></canvas>
-      <canvas id="pieChart"></canvas>
-    </div>
+<div id="right-pane">
+    <div id="drag-handle"></div>
+
+  <span class="closebtn" onclick="closeStats()">&times;</span>
+<h2 id="reports-title">Αριθμός Αναφορών Ανα Κατηγορία και Χρόνο</h2>
+  <canvas id="myChart" width="50" height="40"></canvas>
+  <canvas id="pieChart"></canvas>
+</div>
+
 
   </div>
 
