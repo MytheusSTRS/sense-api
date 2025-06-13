@@ -239,7 +239,7 @@ flex:1;
   background: #555;
 }
 #right-pane.show {
-  width: 17vw;
+  width: 30vw;
   padding: 20px;
   /* slide in */
   position: relative;
