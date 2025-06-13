@@ -684,7 +684,7 @@ function drawResolvedBarChart(resolutionPercent) {
       align: 'right',        
       offset: 16,
       formatter: value => `${value}%`,
-      color: '#000',
+      color: '#fff',
       font: {
         size: 30,
         weight: 'bold'
