@@ -89,6 +89,27 @@ async function getData(startdate, enddate, request_type) {
   return _data;
 }
 
+async function splitRequests(startDate, endDate, request_type, results = []) {
+  const data = await getData(startDate, endDate, request_type);
+
+  if (data.length < 1000) {
+    results.push(data); // Save this chunk
+    return results;
+  }
+
+  // Split date range
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const mid = new Date((start.getTime() + end.getTime()) / 2);
+  const midStr = mid.toISOString().split("T")[0];
+
+  // Recurse on each half
+  await splitRequests(startDate, midStr, request_type, results);
+  await splitRequests(midStr, endDate, request_type, results);
+
+  return results;
+}
+
 // Function for the Filters button
 function toggleDropdown() {
   document.getElementById("dropdownMenu").classList.toggle("show");
@@ -184,7 +205,7 @@ async function loadAndRender() {
   const endDate = document.getElementById("endDate").value;
   const marker_icons = loadMarkerIcons();
 
-  reports = await getData(startDate, endDate, "issue");
+  reports = (await splitRequests(startDate, endDate, "issue")).flat();
 
   markers.forEach(m => map.removeLayer(m));
   markers = [];
@@ -474,6 +495,96 @@ function drawPieChart(percentages) {
         }
       }
     }
+  });
+}
+
+function calculateResolutionRate(reports) {
+    if (!reports.length) return 0;
+
+    const resolved = reports.filter(report => report.status === "CONFIRMED");
+
+    console.log("Resolved count:", resolved.length);
+    console.log("Total reports:", reports.length);
+    console.log("Resolution %:", ((resolved.length / reports.length) * 100).toFixed(1));
+
+    return ((resolved.length / reports.length) * 100).toFixed(1);
+}
+
+
+
+function drawResolvedBarChart(resolutionPercent) {
+  const ctx = document.getElementById('resolvedBarChart').getContext('2d');
+
+  if (window.myResolvedChart) {
+    window.myResolvedChart.destroy();
+  }
+
+  // Επέλεξε χρώμα
+  let color = 'rgba(75, 192, 192, 0.7)';
+  let border = 'rgba(75, 192, 192, 1)';
+
+  // Βεβαιώσου ότι είναι αριθμός
+  const percentValue = parseFloat(resolutionPercent);
+
+  window.myResolvedChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Ποσοστό Επίλυσης'],
+      datasets: [{
+        label: `Επίλυση: ${percentValue}%`,
+        data: [percentValue],
+        backgroundColor: color,
+        borderColor: border,
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      indexAxis: 'y', // Θες οριζόντια ή κάθετη μπάρα; Αν όχι, άλλαξέ το σε 'x'
+      scales: {
+        x: {
+          min: 0,
+          max: 100,
+          title: {
+            display: true,
+            text: '% Επιλυμένων Αναφορών'
+          },
+          ticks: {
+            callback: function (value) {
+              return value + '%';
+            }
+          }
+        },
+        y: {
+          display: true
+        }
+      },
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              return `${context.raw}% επιλυμένα`;
+            }
+          }
+        },
+        datalabels: {
+          anchor: 'end',
+          align: 'right',
+          formatter: function (value) {
+            return value + '%';
+          },
+          color: '#000',
+          font: {
+            weight: 'bold',
+            size: 14
+          }
+        }
+      }
+    },
+    plugins: [ChartDataLabels]
   });
 }
 
