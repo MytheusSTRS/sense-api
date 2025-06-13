@@ -259,7 +259,7 @@ async function bind_popup_on_issue(marker, issue) {
   <div class="popup-container">
     <div class="popup-main">
       <strong>${translateCategories(issue.issue)}</strong><br>
-      <img src=${issue.image} alt="No image" style="width:100%; max-height:200px; overflow:hidden; display:block; margin:auto">
+      <img src=${issue.image} alt="Δεν υπάρχει εικόνα" style="width:100%; max-height:200px; overflow:hidden; display:block; margin:auto">
       ${issue.description}<br>
     </div>
     <div style="margin-left: -14px; text-align: left;">
