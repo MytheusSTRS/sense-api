@@ -787,8 +787,8 @@ let startX = 0;
 let startWidth = 0;
 
 const screenWidth = screen.width;
-const MIN_WIDTH = 0.17 * screenWidth;
-const MAX_WIDTH = 0.225 * screenWidth;
+const MIN_WIDTH = 0.3 * screenWidth;
+const MAX_WIDTH = 0.5 * screenWidth;
 
 dragHandle.addEventListener('mousedown', (e) => {
   isDragging = true;
