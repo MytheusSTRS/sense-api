@@ -14,6 +14,7 @@ class Issue {
   }
 }
 
+Chart.defaults.color = 'white';// Κάνει το κείμενο στα γραφήματα άσπρο
 //Translates issue categories
 const labelMap = {
   "garbage": "Σκουπίδια",
