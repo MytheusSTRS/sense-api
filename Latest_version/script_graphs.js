@@ -196,7 +196,7 @@ async function renderCharts() {
 $(document).ready(() => {
   const today = new Date();
   const priorMonth = new Date();
-  priorMonth.setMonth(today.getMonth() - 1);
+  priorMonth.setDate(today.getDate() - 7);
 
   const formatDate = (date) => date.toISOString().split('T')[0];
 
@@ -204,4 +204,14 @@ $(document).ready(() => {
   $('#endDate').val(formatDate(today));
 
   renderCharts();
+
+
+
+
+
+
+
+
+
+
 });

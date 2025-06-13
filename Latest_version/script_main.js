@@ -701,6 +701,14 @@ function getSelectedCategories() {
     .map(input => input.value);
 }
 
+const today = new Date();
+const priorWeek = new Date();
+priorWeek.setDate(today.getDate() - 7);
+const formatDate = (date) => date.toISOString().split('T')[0];
+$('#startDate').val(formatDate(priorWeek));
+$('#endDate').val(formatDate(today));
+
+
 document.querySelectorAll('#dropdownMenu input[type="checkbox"]').forEach(checkbox => {
   checkbox.addEventListener('change', () => {
     filterMarkersByDropdown();
