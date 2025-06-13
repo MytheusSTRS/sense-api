@@ -160,7 +160,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   box-shadow: -3px 0 10px rgba(0, 0, 0, 0.3);
   transition: width 0.3s ease;
   height: 100%;
-  position: fixed;
+  position: relative;
   right: 0;
   top: 0;
   width: 0;
@@ -171,7 +171,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   padding-right: 10px; /* για να μην κόβεται το περιεχόμενο */
   scrollbar-gutter: stable; /* για να μην "κουνιέται" όταν εμφανίζεται το scrollbar */
   box-sizing: border-box; /* για να μετράει σωστά padding */
- 
+  display: flex;
+  flex-direction: column; 
+flex:1;
 }
 .right-panel-header {
   background: linear-gradient(to right, #2b4b77, #1c314e); /* πιο ζωντανό */
@@ -322,4 +324,36 @@ button:disabled {
   height: auto !important; /* αναλογικό ύψος */
   display: block;
   margin: 10px auto;
+}
+
+#full {
+  display: flex;
+    flex-direction: row;    /* Horizontal split */
+  position: relative;
+
+}
+
+#handle {
+  position: absolute;
+  top: 10px; /* adjust vertical position */
+  left: -40px; /* negative offset to place it *on top* of right-pane's left edge */
+  width: 40px; /* width of handle */
+  height: 40px; /* optional height */
+  cursor: ew-resize;
+  z-index: 1000; /* above right-pane */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 4px rgba(0,0,0,0.2);
+}
+
+
+#handle button {
+  font-size: 15px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+    transform: scaleX(1);
 }
