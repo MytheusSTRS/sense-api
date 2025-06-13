@@ -738,7 +738,7 @@ function toggleStats() {
 function openStats() {
 
   document.getElementById("right-pane").classList.add("show");
-  document.getElementById('toggle').textContent = "->";
+  document.getElementById('toggle').style.transform = "scaleX(-1)";
   statsVisible = true;
 
   map.panBy([350, 0], { animate: true, duration: 0.5 });
@@ -762,7 +762,7 @@ function openStats() {
 
 function closeStats() {
   document.getElementById("right-pane").classList.remove("show");
-  document.getElementById('toggle').textContent = "<-";
+  document.getElementById('toggle').style.transform = "scaleX(1)";
   statsVisible = false;
   rightPane.style.width = '';
   map.panBy([-350, 0], { animate: true, duration: 0.5 });
