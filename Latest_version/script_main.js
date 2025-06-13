@@ -557,7 +557,7 @@ function drawPieChart(percentages) {
     type: 'pie',
     data: {
       // μετάφραση στα ελληνικά 
-      labels: Object.values(labelMap),//['Περιβάλλον', 'Οδικά Έργα', 'Πράσινο/φυτά', 'Απορρίμματα', 'Φωτισμός', 'Υδραυλικά', 'protection-policy(?)'],
+      labels: ['Περιβάλλον', 'Οδικά Έργα', 'Πράσινο/φυτά', 'Απορρίμματα', 'Φωτισμός', 'Υδραυλικά', 'protection-policy(?)'],
       // μετάφραση στα ελληνικά 
       datasets: [{
         data: [
