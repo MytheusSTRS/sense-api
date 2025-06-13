@@ -443,20 +443,20 @@ function drawChart(chartData, animate = true) {
     myChart.destroy();
   }
   // μετάφραση στα ελληνικά 
-  const greekLabels = {
-    environment: 'Περιβάλλον',
-    'road-constructor': 'Οδικά Έργα',
-    green: 'Πράσινο/φυτά',
-    garbage: 'Απορρίμματα',
-    lighting: 'Φωτισμος',
-    plumbing: 'Υδραυλικά',
-    'protection-policy': '(?)'
-  };
+  // const greekLabels = {
+  //   environment: 'Περιβάλλον',
+  //   'road-constructor': 'Οδικά Έργα',
+  //   green: 'Πράσινο/φυτά',
+  //   garbage: 'Απορρίμματα',
+  //   lighting: 'Φωτισμος',
+  //   plumbing: 'Υδραυλικά',
+  //   'protection-policy': '(?)'
+  // };
   chartData.datasets.forEach(dataset => {
     const key = dataset.label.split(" ")[0]; // π.χ. "garbage"
-    const match = Object.keys(greekLabels).find(k => dataset.label.startsWith(k));
+    const match = Object.keys(labelMap).find(k => dataset.label.startsWith(k));
     if (match) {
-      dataset.label = `${greekLabels[match]} (${dataset.data.reduce((a, b) => a + b, 0)})`;
+      dataset.label = `${labelMap[match]} (${dataset.data.reduce((a, b) => a + b, 0)})`;
     }
   });
 // μετάφραση στα ελληνικά 
@@ -557,7 +557,7 @@ function drawPieChart(percentages) {
     type: 'pie',
     data: {
       // μετάφραση στα ελληνικά 
-      labels: ['Περιβάλλον', 'Οδικά Έργα', 'Πράσινο/φυτά', 'Απορρίμματα', 'Φωτισμός', 'Υδραυλικά', 'protection-policy(?)'],
+      labels: Object.valules(labelMap),//['Περιβάλλον', 'Οδικά Έργα', 'Πράσινο/φυτά', 'Απορρίμματα', 'Φωτισμός', 'Υδραυλικά', 'protection-policy(?)'],
       // μετάφραση στα ελληνικά 
       datasets: [{
         data: [
