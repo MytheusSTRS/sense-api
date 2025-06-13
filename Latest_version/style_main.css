@@ -1,0 +1,325 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #1a4170;
+  background-image: url("rio.jpg");
+  background-size: cover;
+
+}
+
+.filters {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: rgba(2, 15, 43, 0.6);
+  padding-top: 1vh;
+  padding-bottom: 1vh;
+  text-align: center;
+  font-size: 1.1vw;
+  color: white;
+  font-weight: 700;
+  border-top-left-radius: 1vw;
+  border-top-right-radius: 1vw;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+#map {
+  height: 80vh;
+  width: 100%;
+  z-index: 1;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 1vw;
+  border-bottom-right-radius: 1vw;
+}
+
+h1 {
+  text-align: center;
+  margin: 2vh;
+  font-size: 4.2vh;
+  color: #1a4170;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 700;
+  background: rgb(255, 255, 255, 0.6);
+  max-width: 28vw;
+  margin: 2vh auto;
+  border-radius: 2vh;
+}
+
+button {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding-top: .75vh;
+  padding-bottom: .75vh;
+  padding-left: 4vh;
+  padding-right: 4vh;
+  margin-left: 1.5vh;
+  margin-right: 1.5vh;
+  font-size: 1vw;
+  border-radius: 2vw;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  color: #1a4170;
+}
+
+#startDate,
+#endDate {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1vw;
+  margin-left: 0.5vh;
+  margin-right: 1.2vh;
+  border-radius: 0.5vw;
+  font-weight: 600;
+  color: #1a4170;
+  border: 0.3vh rgba(2, 15, 43, 1, 0.6);
+  background-color: rgba(255, 255, 255, 0.8);
+  padding-left: 1vw;
+  padding-right: 0.5vw;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(19%) sepia(25%) saturate(2059%) hue-rotate(182deg) brightness(91%) contrast(90%);
+  cursor: pointer;
+  margin-right: 0.5vw;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-button {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding-top: .75vh;
+  padding-bottom: .75vh;
+  padding-left: 4vh;
+  padding-right: 4vh;
+  margin-left: 1.5vh;
+  margin-right: 1.5vh;
+  font-size: 1vw;
+  border-radius: 2vw;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+}
+
+.dropdown-content {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding-top: .75vh;
+  padding-bottom: .75vh;
+  padding-left: 4vh;
+  padding-right: 4vh;
+  margin-left: 1.5vh;
+  margin-right: 1.5vh;
+  font-size: 1vw;
+  border-radius: 2vw;
+  font-weight: 700;
+  background-color: #ffffff;
+  color: #000000;
+  position: absolute;
+  z-index: 69;
+  display: none;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  text-align: left;
+}
+
+.dropdown-content label {
+  display: block;
+  margin-bottom: 1vh;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.show {
+  display: block;
+}
+
+
+.container {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.left-pane {
+  padding: 1vw;
+  box-sizing: border-box;
+  transition: all 0.5s ease;
+  flex-grow: 1;
+
+
+}
+
+
+#right-pane {
+  background-color: #2b293c; /* dark slate */
+  color: #ffffff;            /* σχεδόν λευκό */
+  border-left: 2px solid #59677a; /* mid-gray border */
+  font-family: 'Roboto', sans-serif;
+  box-shadow: -3px 0 10px rgba(0, 0, 0, 0.3);
+  transition: width 0.3s ease;
+  height: 100%;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 0;
+  overflow: hidden;
+  z-index: 1000;
+  overflow-y: auto;
+  max-height: 100vh;
+  padding-right: 10px; /* για να μην κόβεται το περιεχόμενο */
+  scrollbar-gutter: stable; /* για να μην "κουνιέται" όταν εμφανίζεται το scrollbar */
+  box-sizing: border-box; /* για να μετράει σωστά padding */
+ 
+}
+.right-panel-header {
+  background: linear-gradient(to right, #2b4b77, #1c314e); /* πιο ζωντανό */
+  color: #ffffff;
+  padding: 12px 20px;
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.3px;
+}
+/* Δεν καταλαβαινω γιατί δεν αλλάζει το h2 και ειναι ακόμα έτσι αλλά λογικα παω για ύπνο */
+.right-panel-header h2 {
+  margin: 0;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#reports-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 16px 20px;
+  color: #ffffff;
+  text-align: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.right-panel-header .close-button {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 20px;
+  cursor: pointer;
+}
+.right-pane::-webkit-scrollbar {
+  width: 10px;
+  direction: rtl;
+}
+.chart-container {
+  margin-bottom: 32px;
+  padding: 16px;
+  background-color: #1a2433;
+  border-radius: 8px;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.05);
+}
+
+.right-pane::-webkit-scrollbar-track {
+  background: #222;
+}
+
+.right-pane::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+
+.right-pane::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+#right-pane.show {
+  width: 17vw;
+  padding: 20px;
+  /* slide in */
+  position: relative;
+}
+
+#right-pane .closebtn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 4vh;
+  cursor: pointer;
+}
+
+#drag-handle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: .2vw;
+  height: 100%;
+  cursor: ew-resize;
+  background-color: rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.leaflet-control-zoom {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+  color: #1a4170 !important;
+  font-size: 22px; /* den eimai sigouros ti allazei auto */
+  font-weight: bold;
+  background-color: white;
+  border: none;
+  padding: 1vh;
+}
+
+.popup-main {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1.7vh;
+  color: #1a4170;
+  text-align: left;
+  margin-bottom: 0.5vh;
+}
+
+.popup-main strong {
+  display: block;
+  font-size: 2.1vh;
+  font-weight: bold;
+  color: #1a4170;
+  text-align: center;
+}
+
+.popup-main img {
+  border-radius: 1.5vh;
+  margin-bottom: 1vh;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+#reports-title {
+  display: none;
+}
+
+
+#resolvedBarChart {
+  height: 100px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+#myChart, #pieChart, #resolvedBarChart {
+  width: 100% !important;  /* να καταλαμβάνουν το πλήρες πλάτος του container */
+  max-width: 100%;         /* να μην ξεπερνούν το container */
+  height: auto !important; /* αναλογικό ύψος */
+  display: block;
+  margin: 10px auto;
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="el">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Patras Smart City Graphics</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment"></script>
+  <script src="script_graphs.js"></script>
+  <link rel="stylesheet" href="style_graphs.css">
+</head>
+
+<body>
+  <h1>Patras Smart City</h1>
+  <button class="back-button" onclick="history.back()">← Πίσω</button>
+  </div>
+
+  <div class="filters">
+    Από: <input type="date" id="startDate" />
+    Έως: <input type="date" id="endDate" />
+    <button onclick="renderCharts()">Φόρτωσε Δεδομένα</button>
+  </div>
+  <div class="chart-row">
+    <div class="chart-section">
+      <h2>Κατηγορίες Προβλημάτων </h2>
+      <canvas id="issueChart"></canvas>
+    </div>
+    <div class="chart-section">
+      <h2>Συναισθήματα Πολιτών</h2>
+      <canvas id="feelingChart"></canvas>
+    </div>
+</body>
+
+</html>

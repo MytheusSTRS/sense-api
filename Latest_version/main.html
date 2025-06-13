@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>SenseCity Dashboard - Patras</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script_main.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style_main.css" />
+
+<body>
+
+  <div class="container">
+    <div class="left-pane">
+      <h1>SenseCity Issues - Patras</h1>
+      <div class="filters">
+        Από: <input type="date" id="startDate" value="2025-04-20" />
+        Έως: <input type="date" id="endDate" value="2025-04-22" />
+
+        <button onclick="initialize()">Φόρτωσε Δεδομένα<span id="totalReports"></span></button>
+
+        <div class="dropdown">
+          <button class="dropdown-button" onclick="toggleDropdown()">Φίλτρα</button>
+          <div class="dropdown-content" id="dropdownMenu">
+            <label><input type="checkbox" value="environment" checked> Περιβάλλον </label>
+            <label><input type="checkbox" value="road-constructor" checked> Οδικά Έργα </label>
+            <label><input type="checkbox" value="green" checked> Πράσινο </label>
+            <label><input type="checkbox" value="garbage" checked> Σκουπίδια </label>
+            <label><input type="checkbox" value="lighting" checked> Φωτισμός </label>
+            <label><input type="checkbox" value="plumbing" checked> Υδραυλικά </label>
+            <label><input type="checkbox" value="protection-policy" checked> Θέματα ασφαλείας </label>
+            <label class="remember-label">
+                <input type="checkbox" id="rememberFilters" />
+                 Απομνημόνευση φίλτρων
+            </label>
+          </div>
+        </div>
+
+        <button onclick="window.location.href='graphs.html'">Γραφήματα</button>
+        <!---->
+        <button id='toggle' onclick="toggleStats()"> <- </button>
+
+      </div>
+
+      <div id="map"></div>
+    </div>
+
+    <div id="right-pane">
+      <div id="drag-handle"></div>
+
+      <span class="closebtn" onclick="closeStats()">&times;</span>
+      
+      <h2 id="reports-title">Στατιστικά για το επιλεγμένο χρονικό διάστημα</h2>
+      <canvas id="myChart" width="100" height="100"></canvas>
+      <canvas id="pieChart"></canvas>
+      <canvas id="resolvedBarChart" width="100" height="100"></canvas>
+    </div>
+
+
+  </div>
+
+</body>
+
+</html>
