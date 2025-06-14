@@ -44,8 +44,6 @@
         </div>
 
         <button onclick="window.location.href='graphs.html'">Γραφήματα</button>
-        <!---->
-        <button id='toggle' onclick="toggleStats()"> <- </button>
 
       </div>
 
@@ -55,7 +53,8 @@
 <div id="full">
 <div id="handle"><button id='toggle' onclick="toggleStats()"> ← </button></div>
     <div id="right-pane">
-    <span class="closebtn" onclick="closeStats()">&times;</span>
+    <div id="drag-handle"></div>
+      <span class="closebtn" onclick="closeStats()">&times;</span>
       
       <h2 id="reports-title">Στατιστικά για το επιλεγμένο χρονικό διάστημα</h2>
       <canvas id="myChart" width="100" height="100"></canvas>
