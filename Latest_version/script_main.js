@@ -445,15 +445,19 @@ const labelColors = {
   'protection-policy': 'rgba(112, 165, 63, 0.7)'
 };
 
-
 function renderSharedLegend(containerId) {
   const container = document.getElementById(containerId);
   container.innerHTML = '';
 
   container.style.display = 'flex';
-  container.style.flexWrap = 'wrap'; // Αν είναι πολλά, να πάνε στην επόμενη γραμμή
-  container.style.gap = '12px';      // Απόσταση ανάμεσα στα items
+  container.style.flexWrap = 'wrap';
+  container.style.gap = '12px';
   container.style.alignItems = 'center';
+
+  const rightPaneWidth = document.getElementById('right-pane').offsetWidth;
+
+  // Base font size calculation: scale proportionally (you can adjust the divisor)
+  const fontSizePx = Math.max(10, rightPaneWidth / 30); // Ensures minimum font size
 
   Object.keys(labelMap).forEach(key => {
     const legendItem = document.createElement('div');
@@ -462,21 +466,20 @@ function renderSharedLegend(containerId) {
 
     const colorBox = document.createElement('span');
     colorBox.style.backgroundColor = labelColors[key];
-    colorBox.style.width = '12px';
-    colorBox.style.height = '12px';
+    colorBox.style.width = fontSizePx * 0.8 + 'px';
+    colorBox.style.height = fontSizePx * 0.8 + 'px';
     colorBox.style.display = 'inline-block';
-    colorBox.style.marginRight = '6px';
+    colorBox.style.marginRight = fontSizePx * 0.2 + 'px';
 
     const label = document.createElement('span');
     label.textContent = labelMap[key];
+    label.style.fontSize = fontSizePx + 'px';
 
     legendItem.appendChild(colorBox);
     legendItem.appendChild(label);
     container.appendChild(legendItem);
   });
 }
-
-
 
 let myChart = null;
 
@@ -785,6 +788,8 @@ function openStats() {
   document.getElementById("right-pane").classList.add("show");
   document.getElementById('toggle').style.transform = "scaleX(-1)";
   statsVisible = true;
+document.getElementsByClassName("closebtn")[0].style.cursor = 'pointer';
+
 
   map.panBy([350, 0], { animate: true, duration: 0.5 });
 
@@ -802,10 +807,19 @@ function openStats() {
     drawResolvedBarChart(resolutionPercent);
 
     document.getElementById("reports-title").style.display = "block";
+        document.getElementById("sharedLegend").style.display = "flex";
+        document.getElementsByClassName("closebtn").disabled = false;
+
   }, 400);
+  
+      dragHandle.style.pointerEvents = 'auto';
+    dragHandle.style.cursor = 'ew-resize';
 }
 
 function closeStats() {
+  if (!statsVisible)
+      return;
+document.getElementsByClassName("closebtn")[0].style.cursor = 'default';
   document.getElementById("right-pane").classList.remove("show");
   document.getElementById('toggle').style.transform = "scaleX(1)";
   statsVisible = false;
@@ -821,7 +835,10 @@ function closeStats() {
   window.myResolvedChart.destroy();
   window.myResolvedChart = null;
   document.getElementById("reports-title").style.display = "none";
+    document.getElementById("sharedLegend").style.display = "none";
 
+      dragHandle.style.pointerEvents = 'none';
+    dragHandle.style.cursor = 'default';
 }
 
 const rightPane = document.getElementById('right-pane');
@@ -832,8 +849,8 @@ let startX = 0;
 let startWidth = 0;
 
 const screenWidth = screen.width;
-const MIN_WIDTH = 0.3 * screenWidth;
-const MAX_WIDTH = 0.4 * screenWidth;
+const MIN_WIDTH = 0.195 * screenWidth;
+const MAX_WIDTH = 0.34 * screenWidth;
 
 dragHandle.addEventListener('mousedown', (e) => {
   isDragging = true;
@@ -859,12 +876,12 @@ document.addEventListener('mousemove', (e) => {
   if (newWidth > MAX_WIDTH) newWidth = MAX_WIDTH;
 
   rightPane.style.width = `${newWidth}px`;
-
+renderSharedLegend('sharedLegend');
   setTimeout(() => {
     const buttons = document.querySelectorAll('button');
 
     buttons.forEach(btn => {
-      if (rightPane.offsetWidth > (0.205 * screenWidth)) {
+      if (rightPane.offsetWidth > (0.28 * screenWidth)) {
         btn.style.paddingLeft = "2.5vh";
         btn.style.marginLeft = ".5vh";
         btn.style.marginRight = ".5vh";
