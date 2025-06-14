@@ -315,6 +315,7 @@ async function loadAndRender() {
   if (statsVisible) {
     const countsByCategory = groupReportsByTimeBuckets(reports, startDate, endDate);
     const chartData = prepareChartData(countsByCategory, startDate, endDate);
+    renderSharedLegend('sharedLegend');
     drawChart(chartData, true);
 
     const percentages = calculatePercentages(reports);
@@ -434,6 +435,49 @@ function prepareChartData(countsByCategory, startDateStr, endDateStr) {
   };
 }
 
+const labelColors = {
+  environment: 'rgba(54, 162, 235, 0.7)',
+  'road-constructor': 'rgba(255, 159, 64, 0.7)',
+  green: 'rgba(75, 192, 192, 0.7)',
+  garbage: 'rgba(255, 99, 132, 0.7)',
+  lighting: 'rgba(99, 255, 151, 0.7)',
+  plumbing: 'rgba(126, 60, 96, 0.7)',
+  'protection-policy': 'rgba(112, 165, 63, 0.7)'
+};
+
+
+function renderSharedLegend(containerId) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+
+  container.style.display = 'flex';
+  container.style.flexWrap = 'wrap'; // Αν είναι πολλά, να πάνε στην επόμενη γραμμή
+  container.style.gap = '12px';      // Απόσταση ανάμεσα στα items
+  container.style.alignItems = 'center';
+
+  Object.keys(labelMap).forEach(key => {
+    const legendItem = document.createElement('div');
+    legendItem.style.display = 'flex';
+    legendItem.style.alignItems = 'center';
+
+    const colorBox = document.createElement('span');
+    colorBox.style.backgroundColor = labelColors[key];
+    colorBox.style.width = '12px';
+    colorBox.style.height = '12px';
+    colorBox.style.display = 'inline-block';
+    colorBox.style.marginRight = '6px';
+
+    const label = document.createElement('span');
+    label.textContent = labelMap[key];
+
+    legendItem.appendChild(colorBox);
+    legendItem.appendChild(label);
+    container.appendChild(legendItem);
+  });
+}
+
+
+
 let myChart = null;
 
 // function to create graph
@@ -460,6 +504,7 @@ function drawChart(chartData, animate = true) {
       dataset.label = `${labelMap[match]} (${dataset.data.reduce((a, b) => a + b, 0)})`;
     }
   });
+
 // μετάφραση στα ελληνικά 
   myChart = new Chart(ctx, {
     type: 'line',
@@ -507,8 +552,7 @@ function drawChart(chartData, animate = true) {
       },
       plugins: {
         legend: {
-          display: true,
-          position: 'top'
+          display: false,
         },
         tooltip: {
           enabled: true,
@@ -595,7 +639,7 @@ function drawPieChart(percentages) {
       responsive: true,
       plugins: {
         legend: {
-          position: 'right',
+          display: false,
         },
         tooltip: {
           callbacks: {
@@ -718,6 +762,7 @@ document.querySelectorAll('#dropdownMenu input[type="checkbox"]').forEach(checkb
     const endDate = document.getElementById("endDate").value;
     const countsByCategory = groupReportsByTimeBuckets(reports, startDate, endDate);
     const filteredChartData = prepareChartData(countsByCategory, startDate, endDate);
+    renderSharedLegend('sharedLegend');
     drawChart(filteredChartData, false);
   });
 });
@@ -744,7 +789,7 @@ function openStats() {
   map.panBy([350, 0], { animate: true, duration: 0.5 });
 
   setTimeout(() => {
-
+    renderSharedLegend('sharedLegend');
     const percentages = calculatePercentages(reports);
     drawPieChart(percentages);
 
@@ -909,6 +954,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
       const countsByCategory = groupReportsByTimeBuckets(reports, startDate, endDate);
       const filteredChartData = prepareChartData(countsByCategory, startDate, endDate);
+      renderSharedLegend('sharedLegend');
       drawChart(filteredChartData, false);
 
       const percentages = calculatePercentages(reports);
