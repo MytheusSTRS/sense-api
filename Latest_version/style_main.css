@@ -5,7 +5,6 @@ body {
   background-color: #1a4170;
   background-image: url("rio.jpg");
   background-size: cover;
-
 }
 
 .filters {
@@ -158,7 +157,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   border-left: 2px solid #59677a; /* mid-gray border */
   font-family: 'Roboto', sans-serif;
   box-shadow: -3px 0 10px rgba(0, 0, 0, 0.3);
-  transition: width 0.3s ease;
+  transition: width 0.5s ease;
   height: 100%;
   position: relative;
   right: 0;
@@ -168,7 +167,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   z-index: 1000;
   overflow-y: auto;
   max-height: 100vh;
-  padding-right: 10px; /* για να μην κόβεται το περιεχόμενο */
+  padding-right: .1vw; /* για να μην κόβεται το περιεχόμενο */
   scrollbar-gutter: stable; /* για να μην "κουνιέται" όταν εμφανίζεται το scrollbar */
   box-sizing: border-box; /* για να μετράει σωστά padding */
   display: flex;
@@ -239,7 +238,7 @@ flex:1;
   background: #555;
 }
 #right-pane.show {
-  width: 30vw;
+  width: 19.5vw;
   padding: 20px;
   /* slide in */
   position: relative;
@@ -250,18 +249,19 @@ flex:1;
   top: 0;
   right: 0;
   font-size: 4vh;
-  cursor: pointer;
+  cursor: default;
 }
 
 #drag-handle {
   position: absolute;
-  top: 0;
   left: 0;
+  top: 0;
   width: .2vw;
   height: 100%;
-  cursor: ew-resize;
-  background-color: rgba(0, 0, 0, 0.1);
+  cursor: default;
+  background-color: rgba(245, 241, 241, 0.26);
   z-index: 10;
+  pointer-events: none;
 }
 
 .leaflet-control-zoom {
@@ -319,11 +319,11 @@ button:disabled {
 }
 
 #myChart, #pieChart, #resolvedBarChart {
-  width: 100% !important;  /* να καταλαμβάνουν το πλήρες πλάτος του container */
-  max-width: 100%;         /* να μην ξεπερνούν το container */
-  height: auto !important; /* αναλογικό ύψος */
+  width: 100% !important;
+  max-width: 100%;
+  height: auto !important;
   display: block;
-  margin: 10px auto;
+  margin: 1vw auto;
 }
 
 #full {
