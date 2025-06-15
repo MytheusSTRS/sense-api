@@ -618,22 +618,22 @@ function drawPieChart(percentages) {
           percentages['protection-policy']
         ],
         backgroundColor: [
-          'rgba(54, 162, 235, 0.7)',
-          'rgba(255, 159, 64, 0.7)',
-          'rgba(75, 192, 192, 0.7)',
-          'rgba(255, 99, 132, 0.7)',
-          'rgba(99, 255, 151, 0.7)',
-          'rgba(126, 60, 96, 0.7)',
-          'rgba(112, 165, 63, 0.7)'
+          '#21B6A8',
+          '#B95CF4',
+          '#A3EBB1',
+          '#8080FF',
+          '#ffff00',
+          '#4caf50',
+          '#FFC0CB'
         ],
         borderColor: [
-          'rgba(54, 162, 235, 0.7)',
-          'rgba(255, 159, 64, 0.7)',
-          'rgba(75, 192, 192, 0.7)',
-          'rgba(255, 99, 132, 0.7)',
-          'rgba(99, 255, 151, 0.7)',
-          'rgba(126, 60, 96, 0.7)',
-          'rgba(112, 165, 63, 0.7)'
+          '#21B6A8',
+          '#B95CF4',
+          '#A3EBB1',
+          '#8080FF',
+          '#ffff00',
+          '#4caf50',
+          '#FFC0CB'
         ],
         borderWidth: 1
       }]
